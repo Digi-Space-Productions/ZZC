@@ -6,3 +6,4 @@
 *.obj
 build*/
 *.ZZT
+!TEST.ZZT
