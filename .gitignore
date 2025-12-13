@@ -4,4 +4,4 @@
 *.bin
 *.err
 build*/
-.*ZZT
+*.ZZT
