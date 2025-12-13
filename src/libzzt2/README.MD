@@ -1,0 +1,1 @@
+This library (LIBZZT2) originated from https://github.com/cknave/kevedit; you must NOT change the license or modify the credits in any way, the original KevEdit was created by Kevin Vance and Ryan Phillips; read LEGAL.MD for more details.
