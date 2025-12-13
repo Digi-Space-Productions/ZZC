@@ -30,7 +30,7 @@ int main() {
     hideCursor();
     clear();
     printf("-= ZZC =-\nLoading TOWN.ZZT...\n");
-    game = zztWorldLoad("TOWN.ZZT");
+    game = zztWorldLoad("TEST.ZZT");
     changeBoard(game, 0);
     renderBoard(1);
     while (gameRunning) {

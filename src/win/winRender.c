@@ -51,7 +51,7 @@ void hideCursor() {
     CONSOLE_CURSOR_INFO cursorInfo;
 
     GetConsoleCursorInfo(hOut, &cursorInfo);
-    cursorInfo.bVisible = FALSE;   // hide
+    cursorInfo.bVisible = FALSE;                /* HIDE the cursor */
     SetConsoleCursorInfo(hOut, &cursorInfo);
 }
 
@@ -60,6 +60,6 @@ void showCursor() {
     CONSOLE_CURSOR_INFO cursorInfo;
 
     GetConsoleCursorInfo(hOut, &cursorInfo);
-    cursorInfo.bVisible = TRUE;    // show
+    cursorInfo.bVisible = TRUE;                 /* SHOW the cursor */
     SetConsoleCursorInfo(hOut, &cursorInfo);
 }

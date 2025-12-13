@@ -53,5 +53,6 @@ $(OUT_DIR)/%.obj: $(ZZT_DIR)/%.c
 clean:
 	rm -rf $(OUT_DIR)/*
 	cp TOWN.ZZT $(OUT_DIR)/TOWN.ZZT
+	cp TEST.ZZT $(OUT_DIR)/TEST.ZZT
 
 .PHONY: all clean

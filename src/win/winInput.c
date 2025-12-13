@@ -16,9 +16,12 @@ int scanKeyboard() {
         if (ir.EventType == KEY_EVENT) {
             KEY_EVENT_RECORD ker = ir.Event.KeyEvent;
             if (ker.bKeyDown) {
-                return ker.wVirtualKeyCode;  // VK code (e.g. VK_P = 80)
+                /* Return the current key code (like 0x80 for ord('p'))*/
+                return ker.wVirtualKeyCode;
             }
         }
     }
-    return -1; // no key pressed
+
+    /* Return -1, no key is pressed. */
+    return -1;
 }
