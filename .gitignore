@@ -3,5 +3,6 @@
 *.exe
 *.bin
 *.err
+*.obj
 build*/
 *.ZZT
