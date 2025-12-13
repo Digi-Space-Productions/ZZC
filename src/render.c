@@ -41,7 +41,16 @@ void printblock(ZZTblock * b, int fullRedraw) {
             unsigned char fg = cl & 0x0F;
             unsigned char bg = (cl >> 4) & 0x0F;
 
-            c = tolower(onlyASCII[c]);
+            switch (whatCharSet) {
+                case(1):
+                case(2):
+                    c = onlyASCII[c];
+                    if (whatCharSet == 2) {
+                        c = tolower(c);
+                    }
+                break;
+            }
+            
 
             /* Only redraw if different from last frame */
             if (fullRedraw ||

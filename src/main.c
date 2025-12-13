@@ -3,6 +3,7 @@ uint8_t currentBoard = 0;
 uint8_t oldBoard = 0;
 uint8_t firstDraw = 0;
 uint8_t gameRunning = 1;
+uint8_t whatCharSet = 0;
 
 void clear() {
     #ifdef _WINDOWS

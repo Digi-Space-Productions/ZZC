@@ -20,5 +20,6 @@
 #include "libzzt2/zzt.h"
 
 extern uint8_t currentBoard;
+extern uint8_t whatCharSet;
 
 #endif
