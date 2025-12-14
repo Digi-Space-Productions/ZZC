@@ -22,3 +22,7 @@ void hideCursor() {
 void showCursor() {
     /* NOT NEEDED */
 }
+
+void sleep_(uint32_t time) {
+
+}

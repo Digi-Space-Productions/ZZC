@@ -8,6 +8,7 @@
 
 
 void changeBoard(ZZTworld *world, uint8_t bn);
+void scanForEntities_updateEntites(ZZTworld *world);
 void movePlayer();
 
 #endif

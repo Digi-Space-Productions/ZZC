@@ -63,3 +63,7 @@ void showCursor() {
     cursorInfo.bVisible = TRUE;                 /* SHOW the cursor */
     SetConsoleCursorInfo(hOut, &cursorInfo);
 }
+
+void sleep_(uint32_t time) {
+    Sleep(time);
+}

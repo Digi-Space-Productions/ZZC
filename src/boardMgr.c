@@ -7,7 +7,9 @@
 
 /* OLD BOARD, important failsafe. */
 ZZTboard *OLDBOARD;
+ZZTboard *currentBoard_global;
 
+void scanForEntities_updateEntites(ZZTworld *world);
 void changeBoard(ZZTworld *world, uint8_t bn) {
     world->cur_board = bn;
     currentBoard = bn;
@@ -15,7 +17,7 @@ void changeBoard(ZZTworld *world, uint8_t bn) {
 }
 
 int pickupObject(ZZTblock *b, ZZTtile *tile, int type, int x, int y);
-uint8_t slowCMP(ZZTblock *b, ZZTtile *tile, int x, int y) {
+uint8_t checkCollision(ZZTblock *b, ZZTtile *tile, int x, int y, uint8_t isPlayer) {
     int type = tile->type;
     switch(type) {
         case(ZZT_EMPTY):
@@ -39,7 +41,9 @@ uint8_t slowCMP(ZZTblock *b, ZZTtile *tile, int x, int y) {
         case(ZZT_SHARK):
         case(ZZT_SLIME):
         case(ZZT_BEAR):
-            return pickupObject(b, tile, type, x, y);
+            if (isPlayer) {
+                return pickupObject(b, tile, type, x, y);
+            }
         break;
     }
     return 0;
@@ -191,10 +195,10 @@ void movePlayer(ZZTworld *world, int x_offs, int y_offs) {
     /* Collision */
     ZZTtile tx = zztTileAt(b, pxC, py);
     ZZTtile ty = zztTileAt(b, px, pyC);
-        if (slowCMP(b, &tx, pxC, py)) {
+        if (checkCollision(b, &tx, pxC, py, 1)) {
             crtB->plx += x_offs;
         }
-        if (slowCMP(b, &ty, px, pyC)) {
+        if (checkCollision(b, &ty, px, pyC, 1)) {
             crtB->ply += y_offs;
         }
 }
@@ -220,4 +224,62 @@ void border(ZZTworld *world, int x, int y) {
     crtB = zztBoardGetCurPtr(world);
     crtB->plx = ox;
     crtB->ply = oy;
+}
+
+/* Entity */
+int8_t testAAA = 1;
+int8_t testBBB = 0;
+uint8_t ignore[ZZT_BOARD_X_SIZE*ZZT_BOARD_Y_SIZE];
+uint8_t checkIgnoreList(int x, int y);
+void markIgnored(int x, int y);
+void pushObject(ZZTworld *world, int x, int y, int nX, int nY);
+void scanForEntities_updateEntites(ZZTworld *world) {
+    ZZTboard *crtB = zztBoardGetCurPtr(world);
+    ZZTblock *b = crtB->bigboard;
+
+    memset(ignore, 0, sizeof(ignore));
+
+    for (int yy = 0; yy < ZZT_BOARD_Y_SIZE; yy++) {
+        for (int xx = 0; xx < ZZT_BOARD_X_SIZE; xx++) {
+            ZZTtile tile = zztTileAt(b, xx, yy);
+
+            if ((tile.type == ZZT_LION) && !(checkIgnoreList(xx,yy))) {
+                ZZTtile tileS = zztTileAt(b,xx,yy-1);
+                uint8_t testS = checkCollision(b, &tileS, xx, yy-1, 0);
+                if (testS) {
+                    pushObject(world, xx, yy, xx, yy-1);
+                }
+            }
+        }
+    }
+
+    testAAA += testBBB;
+    if (testAAA > 3) {
+        testBBB = -1;
+    }
+    if (testAAA < -3) {
+        testBBB = 1;
+    }
+}
+
+void pushObject(ZZTworld *world, int x, int y, int nX, int nY) {
+    ZZTboard *crtB = zztBoardGetCurPtr(world);
+    ZZTblock *b = crtB->bigboard;
+
+    ZZTtile tileOriginal = zztTileAt(b,x,y);
+    ZZTtile tileNew      = zztTileAt(b,nX,nY);
+
+    tileNew.type = tileOriginal.type;
+    tileNew.color = tileOriginal.color;
+    tileOriginal.type = ZZT_EMPTY;
+    zztTileSet(b, x, y,  tileOriginal);
+    zztTileSet(b, nX,nY, tileNew);
+}
+
+uint8_t checkIgnoreList(int x, int y) {
+    return ignore[((y)*ZZT_BOARD_X_SIZE) + (x)];
+}
+
+void markIgnored(int x, int y) {
+    ignore[((y)*ZZT_BOARD_X_SIZE) + (x)] = 1;
 }

@@ -30,7 +30,7 @@ int main() {
     hideCursor();
     clear();
     printf("-= ZZC =-\nLoading TOWN.ZZT...\n");
-    game = zztWorldLoad("TEST.ZZT");
+    game = zztWorldLoad("TOWN.ZZT");
     changeBoard(game, 0);
     renderBoard(1);
     while (gameRunning) {
@@ -50,6 +50,7 @@ void initPlayer();
 void gameLoop() {
     ch = scanKeyboard();
     currentBoardReal = &game->boards[currentBoard];
+    scanForEntities_updateEntites(game);
 
     if (ch != -1) {                         /* Key exists */
         if (currentBoard == 0) {
@@ -97,6 +98,8 @@ void gameLoop() {
     setCursor(0, ZZT_BOARD_Y_SIZE);
     printf("-= ZZC Client =-\nHealth: %4d | Torches: %4d\nAmmo:   %4d | Gems:    %4d\nScore:  %4d\n", playerHealth, playerTorches, playerAmmo, playerGems, playerScore);
     printf("char = %d\n", ch);
+
+    sleep_(120);
 }
 
 void initPlayer() {

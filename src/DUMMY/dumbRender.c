@@ -23,3 +23,7 @@ void hideCursor() {
 void showCursor() {
 
 }
+
+void sleep_(uint32_t time) {
+
+}
