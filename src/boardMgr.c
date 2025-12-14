@@ -238,16 +238,37 @@ void scanForEntities_updateEntites(ZZTworld *world) {
     ZZTblock *b = crtB->bigboard;
 
     memset(ignore, 0, sizeof(ignore));
+    int8_t movOfsX = 0;
+    int8_t movOfsY = 0;
 
     for (int yy = 0; yy < ZZT_BOARD_Y_SIZE; yy++) {
         for (int xx = 0; xx < ZZT_BOARD_X_SIZE; xx++) {
             ZZTtile tile = zztTileAt(b, xx, yy);
+            uint8_t rnd = rand() % 4;
+            switch (rnd) {
+                case(0):
+                    movOfsX = 1;
+                    movOfsY = 0;
+                break;
+                case(1):
+                    movOfsX = 0;
+                    movOfsY = 1;
+                break;
+                case(2):
+                    movOfsX = -1;
+                    movOfsY = 0;
+                break;
+                case(3):
+                    movOfsX = 0;
+                    movOfsY = -1;
+                break;
+            }
 
             if ((tile.type == ZZT_LION) && !(checkIgnoreList(xx,yy))) {
-                ZZTtile tileS = zztTileAt(b,xx,yy-1);
-                uint8_t testS = checkCollision(b, &tileS, xx, yy-1, 0);
+                ZZTtile tileS = zztTileAt(b,xx+movOfsX,yy+movOfsY);
+                uint8_t testS = checkCollision(b, &tileS, xx+movOfsX, yy+movOfsY, 0);
                 if (testS) {
-                    pushObject(world, xx, yy, xx, yy-1);
+                    pushObject(world, xx, yy, xx+movOfsX,yy+movOfsY);
                 }
             }
         }

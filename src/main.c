@@ -27,6 +27,7 @@ void renderBoard(uint8_t full) {
 
 void gameLoop();
 int main() {
+    srand(time(NULL)); 
     hideCursor();
     clear();
     printf("-= ZZC =-\nLoading TOWN.ZZT...\n");
