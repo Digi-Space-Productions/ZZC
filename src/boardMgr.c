@@ -292,7 +292,7 @@ void scanForEntities_updateEntites(ZZTworld *world) {
                 break;
             }
 
-            if ((tile.type == ZZT_LION) && !(checkIgnoreList(xx,yy)) && ((cycle%2) == 0)) {
+            if (((tile.type == ZZT_LION) || (tile.type == ZZT_TIGER)) && !(checkIgnoreList(xx,yy)) && ((cycle%2) == 0)) {
                 ZZTtile tileS = zztTileAt(b,xx+movOfsX,yy+movOfsY);
                 uint8_t testS = checkCollision(b, &tileS, xx+movOfsX, yy+movOfsY, 0);
                 if (testS) {
@@ -325,6 +325,9 @@ void pushObject(ZZTworld *world, int x, int y, int nX, int nY) {
     tileOriginal.type = ZZT_EMPTY;
     zztTileSet(b, x, y,  tileOriginal);
     zztTileSet(b, nX,nY, tileNew);
+
+    markIgnored(x, y);
+    markIgnored(nX,nY);
 }
 
 uint8_t checkIgnoreList(int x, int y) {
