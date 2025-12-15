@@ -9,6 +9,29 @@
 ZZTboard *OLDBOARD;
 ZZTboard *currentBoard_global;
 
+static int clcDst(int x1, int y1, int x2, int y2) {
+    int dx = x2 - x1; if (dx < 0) dx = -dx;
+    int dy = y2 - y1; if (dy < 0) dy = -dy;
+
+    int mn = dx < dy ? dx : dy;
+    return dx + dy - (mn >> 1) - (mn >> 2);     /* small error */
+}
+static int bestDir(int x, int y, int tx, int ty) {
+    int best = 3;
+    int bestDst = clcDst(x, y + 1, tx, ty);     /* North*/
+
+    int d = clcDst(x + 1, y, tx, ty);
+    if (d < bestDst) { bestDst = d; best = 1; } /* Shouth */
+
+    d = clcDst(x, y - 1, tx, ty);
+    if (d < bestDst) { bestDst = d; best = 0; } /* East */
+
+    d = clcDst(x - 1, y, tx, ty);
+    if (d < bestDst) { bestDst = d; best = 2; } /* West */
+
+    return best;
+}
+
 void scanForEntities_updateEntites(ZZTworld *world);
 void changeBoard(ZZTworld *world, uint8_t bn) {
     world->cur_board = bn;
@@ -233,6 +256,7 @@ uint8_t ignore[ZZT_BOARD_X_SIZE*ZZT_BOARD_Y_SIZE];
 uint8_t checkIgnoreList(int x, int y);
 void markIgnored(int x, int y);
 void pushObject(ZZTworld *world, int x, int y, int nX, int nY);
+uint16_t cycle = 0;
 void scanForEntities_updateEntites(ZZTworld *world) {
     ZZTboard *crtB = zztBoardGetCurPtr(world);
     ZZTblock *b = crtB->bigboard;
@@ -244,7 +268,11 @@ void scanForEntities_updateEntites(ZZTworld *world) {
     for (int yy = 0; yy < ZZT_BOARD_Y_SIZE; yy++) {
         for (int xx = 0; xx < ZZT_BOARD_X_SIZE; xx++) {
             ZZTtile tile = zztTileAt(b, xx, yy);
-            uint8_t rnd = rand() % 4;
+            uint8_t rnd = rand() % 5;
+            if (rnd == 4) {
+                rnd = bestDir(xx, yy, crtB->plx, crtB->ply);
+            }
+            
             switch (rnd) {
                 case(0):
                     movOfsX = 1;
@@ -264,7 +292,7 @@ void scanForEntities_updateEntites(ZZTworld *world) {
                 break;
             }
 
-            if ((tile.type == ZZT_LION) && !(checkIgnoreList(xx,yy))) {
+            if ((tile.type == ZZT_LION) && !(checkIgnoreList(xx,yy)) && ((cycle%2) == 0)) {
                 ZZTtile tileS = zztTileAt(b,xx+movOfsX,yy+movOfsY);
                 uint8_t testS = checkCollision(b, &tileS, xx+movOfsX, yy+movOfsY, 0);
                 if (testS) {
@@ -281,6 +309,8 @@ void scanForEntities_updateEntites(ZZTworld *world) {
     if (testAAA < -3) {
         testBBB = 1;
     }
+    cycle++;
+    cycle%=1000;
 }
 
 void pushObject(ZZTworld *world, int x, int y, int nX, int nY) {

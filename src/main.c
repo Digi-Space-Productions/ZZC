@@ -100,7 +100,9 @@ void gameLoop() {
     printf("-= ZZC Client =-\nHealth: %4d | Torches: %4d\nAmmo:   %4d | Gems:    %4d\nScore:  %4d\n", playerHealth, playerTorches, playerAmmo, playerGems, playerScore);
     printf("char = %d\n", ch);
 
-    sleep_(120);
+    if (playerHealth >= 1) {
+        sleep_(120);
+    }
 }
 
 void initPlayer() {
